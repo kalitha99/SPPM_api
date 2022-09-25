@@ -13,6 +13,7 @@ const createProduct = async (req, res) => {
             addedBy: req.body.addedBy,
             filePath: req.file.path,
             category: req.body.category,
+            description: req.body.description.split(','),
             img: {
                 data: fs.readFileSync("public/"+req.file.filename),
                 contentType:"image/png"
@@ -85,19 +86,27 @@ const searchProducts = async (req, res) => {
     const token = req.headers['x-access-token']
     console.log(token)
     console.log("getProducts")
-    var Products;
+    var Products ;
     try {
         console.log(req.body)
         var vehicles;
-        if (req.body.category == "") {
+        if (req.body.category == "" && req.body.id == "") {
             console.log("if")
              Products = await product.find()
-        }else {
+        }else if (req.body.id == "" ){
             console.log("else")
              Products = await product.find({
                     category: req.body?.category
             })
+        }else if (req.body.category == ""){
+            console.log("else if ")
+            Products = await product.find({
+                _id: req.body?.id
+            })
+
+            console.log(Products)
         }
+        Products.description=Products?.description?.split(',');
         return res.json({status: 'ok', Products: Products})
     } catch (error) {
         console.log(error)

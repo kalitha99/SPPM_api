@@ -46,6 +46,11 @@ const productSchema = new mongoose.Schema({
         required: true,
 
     },
+    description:{
+        type: Array,
+
+
+    },
     img:{
         data: Buffer,
         contentType: String,
